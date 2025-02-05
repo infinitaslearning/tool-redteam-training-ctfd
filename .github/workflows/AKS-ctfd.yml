@@ -1,0 +1,50 @@
+name: CTFD-Deployment
+
+on:
+  push:
+    branches: none
+  pull_request:
+    branches: none
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'Environment name: dev'
+        required: true
+        default: dev
+        options:
+          - dev
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    permissions:
+      id-token: write
+      contents: read
+  
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: az login and set k8s context
+      run: |
+        echo "Environment: ${{github.event.inputs.environment}}"
+        az login --service-principal --username ${{ secrets.IL_DIGITAL_PLATFORMS_ACTIONS_USERNAME }} --password ${{ secrets.IL_DIGITAL_PLATFORMS_ACTIONS_PASSWORD }} --tenant ${{ secrets.IL_DIGITAL_PLATFORMS_TENANT_ID }}
+        az account set --subscription ${{ secrets.IL_DIGITAL_PLATFORMS_GEN2_SUBSCRIPTION_ID }}
+        az aks get-credentials --resource-group il-k8s-${{github.event.inputs.environment}} --name il-k8s-${{github.event.inputs.environment}} --admin --overwrite-existing
+
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: '3.13.3'
+
+    - name: Deploy ctfd
+      run: |
+        helm upgrade ctfd $GITHUB_WORKSPACE/helm/ctfd \
+          --namespace training \
+          --install \
+          --timeout 10m0s \
+          --wait \
+          --atomic \
+          --values $GITHUB_WORKSPACE/helm/ctfd/values.yaml
