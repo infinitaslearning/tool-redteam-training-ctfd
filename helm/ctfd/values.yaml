@@ -1,0 +1,71 @@
+ctfd:
+  replicaCount: 1
+  image:
+    repository: ilwebshops.azurecr.io/ctfd
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8000
+  env:
+    SECRET_KEY: sdjafoiheqiohfasjoiasjdifosafjlkyoisfaudyfuoxucibbxoyugfakgrehvbadsf
+    UPLOAD_FOLDER: /var/uploads
+    DATABASE_URL: mysql+pymysql://ctfd:ctfd@db/ctfd
+    REDIS_URL: redis://cache:6379
+    WORKERS: "1"
+    LOG_FOLDER: /var/log/CTFd
+    ACCESS_LOG: "-"
+    ERROR_LOG: "-"
+    REVERSE_PROXY: "true"
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+mariadb:
+  enabled: true
+  image:
+    tag: 10.11
+  architecture: standalone
+  auth:
+    rootPassword: "ctfd"
+    database: "ctfd"
+    username: "ctfd"
+    password: "ctfd"
+  
+  primary:
+    persistence:
+      enabled: true
+      storageClass: ""
+      size: 2Gi
+    
+    configuration: |-
+      [mysqld]
+      character-set-server=utf8mb4
+      collation-server=utf8mb4_unicode_ci
+      wait_timeout=28800
+      log-warnings=0
+
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      path: /data
+      size: 2Gi
+
+nginx:
+  enabled: true
+  
+  image:
+    repository: nginx
+    tag: stable
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    ports:
+      http: 80

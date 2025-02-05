@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "ctfd.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ctfd.replicas }}
+  selector:
+    matchLabels:
+      {{- include "ctfd.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ctfd.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 0
+      containers:
+      - name: ctfd
+        image: {{ .Values.ctfd.image.repository }}:{{ .Values.ctfd.image.tag }}
+        imagePullPolicy: {{ .Values.ctfd.image.pullPolicy }}
+        env:
+        - name: SECRET_KEY
+          value: {{ .Values.ctfd.env.SECRET_KEY | quote }}
+        - name: UPLOAD_FOLDER
+          value: {{ .Values.ctfd.env.UPLOAD_FOLDER | quote }}
+        - name: DATABASE_URL
+          value: "mysql+pymysql://{{ .Values.mariadb.user }}:{{ .Values.mariadb.password }}@{{ .Release.Name }}-mariadb/{{ .Values.mariadb.database }}"
+        - name: REDIS_URL
+          value: "redis://{{ .Release.Name }}-redis:6379"
+        - name: WORKERS
+          value: {{ .Values.ctfd.env.WORKERS | quote }}
+        - name: LOG_FOLDER
+          value: {{ .Values.ctfd.env.LOG_FOLDER | quote }}
+        - name: ACCESS_LOG
+          value: {{ .Values.ctfd.env.ACCESS_LOG | quote }}
+        - name: ERROR_LOG
+          value: {{ .Values.ctfd.env.ERROR_LOG | quote }}
+        - name: REVERSE_PROXY
+          value: {{ .Values.ctfd.env.REVERSE_PROXY | quote }}
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: ctfd-logs
+          mountPath: /var/log/CTFd
+        - name: ctfd-uploads
+          mountPath: /var/uploads
+      volumes:
+      - name: ctfd-logs
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-logs
+      - name: ctfd-uploads
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-uploads

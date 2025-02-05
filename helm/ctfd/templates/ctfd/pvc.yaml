@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-logs
+  labels:
+    {{- include "ctfd.labels" . | nindent 4 }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.ctfd.persistence.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-uploads
+  labels:
+    {{- include "ctfd.labels" . | nindent 4 }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.ctfd.persistence.size }}
