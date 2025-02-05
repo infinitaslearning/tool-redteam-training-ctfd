@@ -1,4 +1,4 @@
-name: CTFD-Deployment
+name: CTFD-AKS-Deployment
 
 on:
   push:
