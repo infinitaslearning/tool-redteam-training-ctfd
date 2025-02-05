@@ -13,8 +13,13 @@ spec:
       labels:
         {{- include "ctfd.selectorLabels" . | nindent 8 }}
     spec:
+      securityContext:
+        fsGroup: 999
       containers:
       - name: mariadb
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
         image: {{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}
         imagePullPolicy: {{ .Values.mariadb.image.pullPolicy }}
         env:
