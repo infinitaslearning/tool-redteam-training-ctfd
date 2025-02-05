@@ -26,6 +26,8 @@ spec:
           value: {{ .Values.mariadb.password | quote }}
         - name: MARIADB_DATABASE
           value: {{ .Values.mariadb.database | quote }}
+        - name: MARIADB_AUTO_UPGRADE
+          value: "1"
         ports:
         - containerPort: 3306
         volumeMounts:
