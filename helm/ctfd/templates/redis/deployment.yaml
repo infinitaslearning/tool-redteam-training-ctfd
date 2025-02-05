@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         {{- include "ctfd.selectorLabels" . | nindent 8 }}
+        component: redis
     spec:
       containers:
       - name: redis

@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         {{- include "ctfd.selectorLabels" . | nindent 8 }}
+        component: nginx
     spec:
       containers:
       - name: nginx

@@ -41,8 +41,7 @@ redis:
   volumeSize: 1Gi
 
 nginx:
-  enabled: true
-  
+
   image:
     repository: nginx
     tag: stable
