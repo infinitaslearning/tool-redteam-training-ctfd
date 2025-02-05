@@ -1,0 +1,17 @@
+{
+    "name": "Python Development Container",
+    "dockerFile": "Dockerfile",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker": "latest"
+	},
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "GitHub.vscode-github-actions",
+          "ms-azuretools.vscode-docker",
+          "ms-python.python",
+          "ms-toolsai.jupyter"
+        ]
+      }
+    }
+  }
