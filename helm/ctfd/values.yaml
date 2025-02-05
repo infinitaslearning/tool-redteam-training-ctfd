@@ -2,8 +2,8 @@ ctfd:
   replicaCount: 1
   image:
     repository: ilwebshops.azurecr.io/ctfd
-    tag: latest
-    pullPolicy: IfNotPresent
+    tag: v2
+    pullPolicy: Always
   service:
     type: ClusterIP
     port: 8000
@@ -23,28 +23,15 @@ ctfd:
     size: 1Gi
 
 mariadb:
-  enabled: true
   image:
+    repository: mariadb
     tag: 10.11
-  architecture: standalone
-  auth:
-    rootPassword: "ctfd"
-    database: "ctfd"
-    username: "ctfd"
-    password: "ctfd"
-  
-  primary:
-    persistence:
-      enabled: true
-      storageClass: ""
-      size: 2Gi
-    
-    configuration: |-
-      [mysqld]
-      character-set-server=utf8mb4
-      collation-server=utf8mb4_unicode_ci
-      wait_timeout=28800
-      log-warnings=0
+    pullPolicy: IfNotPresent
+  rootPassword: ctfd
+  user: ctfd
+  password: ctfd
+  database: ctfd
+  volumeSize: 1Gi
 
 redis:
   enabled: true

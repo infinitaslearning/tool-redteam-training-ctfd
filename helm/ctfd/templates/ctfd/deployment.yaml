@@ -26,9 +26,9 @@ spec:
         - name: UPLOAD_FOLDER
           value: {{ .Values.ctfd.env.UPLOAD_FOLDER | quote }}
         - name: DATABASE_URL
-          value: "mysql+pymysql://{{ .Values.mariadb.user }}:{{ .Values.mariadb.password }}@{{ .Release.Name }}-mariadb/{{ .Values.mariadb.database }}"
+          value: {{ .Values.ctfd.env.DATABASE_URL | quote }}
         - name: REDIS_URL
-          value: "redis://{{ .Release.Name }}-redis:6379"
+          value: {{ .Values.ctfd.env.REDIS_URL | quote }}
         - name: WORKERS
           value: {{ .Values.ctfd.env.WORKERS | quote }}
         - name: LOG_FOLDER

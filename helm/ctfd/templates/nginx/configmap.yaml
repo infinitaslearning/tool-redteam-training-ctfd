@@ -18,7 +18,7 @@ data:
       # Configuration containing list of application servers
       upstream app_servers {
 
-        server {{ .Release.Name }}-ctfd:8000;
+        server {{ .Release.Name }}:8000;
       }
 
       server {
