@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: ctfd
+  namespace: training
+spec:
+  gateways:
+  - istio-system/ingress
+  hosts:
+  - ctfd.training.dev.core.infinicloud.net
+  http:
+  - route:
+    - destination:
+        host: ctfd.training.svc.cluster.local
