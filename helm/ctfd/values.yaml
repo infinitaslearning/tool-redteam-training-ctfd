@@ -24,7 +24,7 @@ ctfd:
 
 mariadb:
   image:
-    repository: mariadb
+    repository: ilwebshops.azurecr.io/mariadb
     tag: 10.11
     pullPolicy: IfNotPresent
   rootPassword: ctfd
@@ -35,15 +35,14 @@ mariadb:
 
 redis:
   image:
-    repository: redis
+    repository: ilwebshops.azurecr.io/redis
     tag: 4
     pullPolicy: IfNotPresent
   volumeSize: 1Gi
 
 nginx:
-
   image:
-    repository: nginx
+    repository: ilwebshops.azurecr.io/nginx
     tag: stable
     pullPolicy: IfNotPresent
 
